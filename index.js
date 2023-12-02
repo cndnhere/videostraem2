@@ -1,6 +1,17 @@
 const express = require("express");
 const app = express();
 const fs = require("fs");
+app.use((req, res, next) => {
+    console.log('Requested URL:', req.url);
+    console.log('Request IP:', req.ip);
+    if(req.ip == '::ffff:127.0.0.1') 
+    {
+        res.status(400);
+    }
+    console.log('Request from:', req.headers['user-agent']); // Accessing user-agent header
+    console.log('Request IP:', req.ip); // Accessing IP address of the requester
+    next();
+  });
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });

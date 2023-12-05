@@ -1,4 +1,4 @@
-// server.js
+//index.js
 const express = require('express');
 const range = require('range-parser');
 const path = require('path');
@@ -45,8 +45,6 @@ app.get('/video', (req, res) => {
     console.log("Invalid");
     res.status("Invalid");
   }
-    
- 
   });
 
 app.use(express.static('public'));

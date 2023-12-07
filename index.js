@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 app.get('/stream/:token/:isPlay', (req, res) => {
     try {
         let isPlay = 0;
-        axios.get('https://video-stream-server-2l0a.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token).then((resData) => {
+        axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token).then((resData) => {
             isPlay = resData.data.isPlay;
             const range = req.headers.range;
             console.log(isPlay);
@@ -46,7 +46,7 @@ app.get('/stream/:token/:isPlay', (req, res) => {
             let obj = {
                 isPlay: 1
             }
-            return axios.put('https://video-stream-server-2l0a.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
+            return axios.put('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
         }
     } catch (err) {
         console.error('Error streaming video:', err);

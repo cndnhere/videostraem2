@@ -18,7 +18,7 @@ app.get('/stream/:token/:isPlay', (req, res) => {
                 isPlay: 1
             }
             
-        axios.put('http://localhost:3000/api/VideoPlayerInfo/Update/'+req.params.token, obj).then(async (response)=>{
+        axios.put('https://video-stream-server-2l0a.onrender.com/api/VideoPlayerInfo/Update/'+req.params.token, obj).then(async (response)=>{
         })
        
         }

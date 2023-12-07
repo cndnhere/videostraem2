@@ -7,9 +7,6 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
 
 // isPlay = 1;
 app.get('/stream/:token/:isPlay', (req, res) => {

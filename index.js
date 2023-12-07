@@ -7,8 +7,26 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
-
-app.get('/stream/:token/:isPlay', (req, res) => {
+let videoList = [
+    {
+        videoId : 1,
+        path : 'NfA69kfr_Rw'
+    },
+    {
+        videoId : 2,
+        path : 'Dc8cJN923U0'
+        
+    },
+    {
+        videoId : 3,
+        path : 'jRyf8fhKPJ8'
+       
+    }
+]
+function getVideo(id){
+   return videoList.find(x=> x.videoId == id).path;
+}
+app.get('/stream/:token/:videoId', (req, res) => {
     try {
         let isPlay = 0;
         axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token).then((resData) => {
@@ -17,7 +35,7 @@ app.get('/stream/:token/:isPlay', (req, res) => {
             console.log(isPlay);
             console.log(range);
             if ((isPlay == 0 && (range == undefined || range == "bytes=0-")) || (isPlay == 1 && range != undefined)) {
-                const videoURL = 'https://youtube.com/shorts/NfA69kfr_Rw';
+                const videoURL = 'https://youtube.com/shorts/'+getVideo(req.params.videoId);
                 const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
 
                 // Create FFmpeg process

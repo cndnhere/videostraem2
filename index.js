@@ -7,65 +7,82 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
 let videoList = [
     {
-        videoId : 1,
-        path : 'NfA69kfr_Rw'
+        videoId: 1,
+        path: 'NfA69kfr_Rw'
     },
     {
-        videoId : 2,
-        path : 'Dc8cJN923U0'
-        
+        videoId: 2,
+        path: 'Dc8cJN923U0'
+
     },
     {
-        videoId : 3,
-        path : 'jRyf8fhKPJ8'
-       
+        videoId: 3,
+        path: 'jRyf8fhKPJ8'
+
     }
 ]
-function getVideo(id){
-   return videoList.find(x=> x.videoId == id).path;
+function getVideo(id) {
+    return videoList.find(x => x.videoId == id).path;
 }
-app.get('/stream/:token/:videoId', (req, res) => {
+
+app.get('/stream/:token/:videoId', async (req, res) => {
+    let isPlay = 0;
+    let objVideoInfo;
+    let objInfoUpdate;
     try {
-        let isPlay = 0;
-        axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token).then((resData) => {
-            isPlay = resData.data.isPlay;
-            const range = req.headers.range;
-            console.log(isPlay);
-            console.log(range);
-            if ((isPlay == 0 && (range == undefined || range == "bytes=0-")) || (isPlay == 1 && range != undefined)) {
-                const videoURL = 'https://youtube.com/shorts/'+getVideo(req.params.videoId);
-                const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
 
-                // Create FFmpeg process
-                const ffmpegProcess = ffmpeg(stream)
-                    .format('mp4')
-                    .audioCodec('copy')
-                    .videoCodec('copy')
-                    .outputOptions('-movflags frag_keyframe+empty_moov')
-                    .on('error', (err) => {
-                        console.error('Error occurred: ' + err.message);
-                    })
-                    .on('end', () => {
-                        console.log('Streaming ended');
-                    });
-                ffmpegProcess.pipe(res);
-            } else {
-                console.log("Invalid");
-                res.status("Invalid");
-            }
-        });
+        // First API call
+        const response1 = await axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token);
+        objVideoInfo = response1.data;
+        console.log('Get isplay '+objVideoInfo.isPlay);
 
+        isPlay = objVideoInfo.isPlay;
         if (isPlay == 0) {
             let obj = {
                 isPlay: 1
             }
-            return axios.put('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
+            const response2 = await axios.put('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
+            objInfoUpdate = response2.data;
+            console.log(objInfoUpdate);
         }
-    } catch (err) {
-        console.error('Error streaming video:', err);
-        res.status(500).send('Error streaming video');
+
+        const range = req.headers.range;
+        console.log(isPlay);
+        console.log(range);
+        if ((isPlay == 0 && (range == undefined || range == "bytes=0-")) || (isPlay == 1 && range != undefined)) {
+            const videoURL = 'https://youtube.com/shorts/' + getVideo(req.params.videoId);
+            // const videoURL = 'https://www.youtube.com/watch?v=EiMX1G8pnYA&t=20s/';
+            const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
+
+            // console.log(stream);
+
+            // Create FFmpeg process
+            const ffmpegProcess = ffmpeg(stream)
+                .format('mp4')
+                .audioCodec('copy')
+                .videoCodec('copy')
+                .outputOptions('-movflags frag_keyframe+empty_moov')
+                .on('error', (err) => {
+                    console.error('Error occurred: ' + err.message);
+                })
+                .on('end', () => {
+                    console.log('Streaming ended');
+                });
+            ffmpegProcess.pipe(res);
+        } else {
+            console.log("Invalid");
+            res.status("Invalid");
+        }
+
+
+
+    } catch (error) {
+        console.error('Error in nested API calls:', error.message);
     }
 });
 
@@ -74,7 +91,7 @@ app.get('/stream/:token/:videoId', (req, res) => {
 //     let obj = {
 //         isPlay: 1
 //     }
-//     axios.put('https://video-stream-server-2l0a.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
+//     axios.put('http://localhost:3000/api/VideoPlayerInfo/Update/' + req.params.token, obj);
 // }
 
 
@@ -91,13 +108,10 @@ function verifyToken(token) {
         } else {
             console.log('Token is valid');
             console.log(decoded);
-            // If needed, you can access the decoded information here: decoded.user, decoded.payload, etc.
-            let obj = {
+                     let obj = {
                 isPlay: 0
             }
-            // const apiResponse = await axios.post('https://localhost:3000//VideoPlayerInfo/Update/'+decoded.userId, obj);
-            // console.log(apiResponse);
-
+        
         }
     });
 }

@@ -74,8 +74,8 @@ app.get('/stream/:token/:videoId', async (req, res) => {
                 .on('end', () => {
                     console.log('Streaming ended');
                 });
-            // ffmpegProcess.pipe(res);
-             res.send("<iframe width="560" height="315" src="${videoURL}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>")
+            ffmpegProcess.pipe(res);
+             
         } else {
             console.log("Invalid");
             res.status("Invalid");

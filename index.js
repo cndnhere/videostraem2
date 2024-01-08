@@ -74,8 +74,8 @@ app.get('/stream/:token/:videoId', async (req, res) => {
                 .on('end', () => {
                     console.log('Streaming ended');
                 });
-            // ffmpegProcess.pipe(res);
-             res.send(stream);
+            ffmpegProcess.pipe(res);
+             // res.send(stream);
              
         } else {
             console.log("Invalid");

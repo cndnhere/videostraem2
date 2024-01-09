@@ -58,24 +58,24 @@ app.get('/stream/:token/:videoId', async (req, res) => {
          if ((isPlay == 0 && range == "bytes=0-") || (isPlay == 1 && (range != "bytes=0-" &&  range != undefined))) {
             const videoURL = 'https://youtube.com/shorts/' + getVideo(req.params.videoId);
             // const videoURL = 'https://www.youtube.com/watch?v=EiMX1G8pnYA&t=20s/';
-            const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
+            // const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
+             ytdl(`https://www.youtube.com/watch?v=${getVideo(req.params.videoId)}`).pipe(res);
 
             // console.log(stream);
 
             // Create FFmpeg process
-            const ffmpegProcess = ffmpeg(stream)
-                .format('mp4')
-                .audioCodec('copy')
-                .videoCodec('copy')
-                .outputOptions('-movflags frag_keyframe+empty_moov')
-                .on('error', (err) => {
-                    console.error('Error occurred: ' + err.message);
-                })
-                .on('end', () => {
-                    console.log('Streaming ended');
-                });
-            ffmpegProcess.pipe(res);
-             // res.send(stream);
+            // const ffmpegProcess = ffmpeg(stream)
+            //     .format('mp4')
+            //     .audioCodec('copy')
+            //     .videoCodec('copy')
+            //     .outputOptions('-movflags frag_keyframe+empty_moov')
+            //     .on('error', (err) => {
+            //         console.error('Error occurred: ' + err.message);
+            //     })
+            //     .on('end', () => {
+            //         console.log('Streaming ended');
+            //     });
+            // ffmpegProcess.pipe(res);
              
         } else {
             console.log("Invalid");

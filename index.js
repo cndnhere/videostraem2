@@ -7,9 +7,9 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(__dirname + "/index.html");
+// });
 let videoList = [
     {
         videoId: 1,

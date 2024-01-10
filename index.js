@@ -40,32 +40,25 @@ app.get('/stream/:token/:videoId', async (req, res) => {
         const response1 = await axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token);
         objVideoInfo = response1.data;
 
-        isPlay = objVideoInfo?objVideoInfo.isPlay:0;
+        isPlay = objVideoInfo? objVideoInfo.isPlay:0;
         if (isPlay == 0) {
             let obj = {
                 isPlay: 1
             }
             const response2 = await axios.put('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/Update/' + req.params.token, obj);
             objInfoUpdate = response2.data;
-            console.log(objInfoUpdate);
         }
 
+        const range = req.headers.range;
+        console.log(range);
+        ytdl('https://www.youtube.com/watch?v=79dq08VydIo').pipe(res);
 
 
-         ytdl('http://www.youtube.com/watch?v=79dq08VydIo').pipe(res);
 
     } catch (error) {
         console.error('Error in nested API calls:', error.message);
     }
 });
-
-
-// if (isPlay == 0) {
-//     let obj = {
-//         isPlay: 1
-//     }
-//     axios.put('http://localhost:3000/api/VideoPlayerInfo/Update/' + req.params.token, obj);
-// }
 
 
 function verifyToken(token) {

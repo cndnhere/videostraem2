@@ -57,7 +57,7 @@ app.get('/stream/:token/:videoId', async (req, res) => {
        // if ((isPlay == 0 && (range == undefined || range == "bytes=0-")) || (isPlay == 1 && range != undefined)) {
          if ((isPlay == 0 && range == "bytes=0-") || (isPlay == 1 && (range != "bytes=0-" &&  range != undefined))) {
             // const videoURL = 'https://youtube.com/shorts/' + getVideo(req.params.videoId);
-             const videoURL = 'https://youtube.com/shorts/' + 2;
+             const videoURL = 'https://youtube.com/shorts/Dc8cJN923U0';
             const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
              // ytdl(`https://www.youtube.com/watch?v=${getVideo(req.params.videoId)}`).pipe(res);
 

@@ -7,13 +7,13 @@ const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const app = express();
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + "/index.html");
-// });
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + "/index.html");
+});
 let videoList = [
     {
         videoId: 1,
-        path: '3syu_UfCrWM'
+        path: 'NfA69kfr_Rw'
     },
     {
         videoId: 2,
@@ -56,13 +56,13 @@ app.get('/stream/:token/:videoId', async (req, res) => {
         console.log(range);
        // if ((isPlay == 0 && (range == undefined || range == "bytes=0-")) || (isPlay == 1 && range != undefined)) {
          if ((isPlay == 0 && range == "bytes=0-") || (isPlay == 1 && (range != "bytes=0-" &&  range != undefined))) {
-            // const videoURL = 'https://youtube.com/shorts/' + getVideo(req.params.videoId);
-             const videoURL = 'https://youtube.com/shorts/Dc8cJN923U0';
+            const videoURL = 'https://youtube.com/shorts/' + getVideo(req.params.videoId);
+            // const videoURL = 'https://www.youtube.com/watch?v=EiMX1G8pnYA&t=20s/';
             const stream = ytdl(videoURL, { filter: 'audioandvideo', quality: 'highest' });
-             // ytdl(`https://www.youtube.com/watch?v=${getVideo(req.params.videoId)}`).pipe(res);
 
             // console.log(stream);
 
+            // Create FFmpeg process
             const ffmpegProcess = ffmpeg(stream)
                 .format('mp4')
                 .audioCodec('copy')
@@ -75,7 +75,6 @@ app.get('/stream/:token/:videoId', async (req, res) => {
                     console.log('Streaming ended');
                 });
             ffmpegProcess.pipe(res);
-             
         } else {
             console.log("Invalid");
             res.status("Invalid");

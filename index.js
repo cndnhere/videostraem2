@@ -62,7 +62,6 @@ app.get('/stream/:token/:videoId', async (req, res) => {
 
             // console.log(stream);
 
-            Create FFmpeg process
             const ffmpegProcess = ffmpeg(stream)
                 .format('mp4')
                 .audioCodec('copy')

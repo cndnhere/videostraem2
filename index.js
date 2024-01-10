@@ -39,7 +39,7 @@ app.get('/stream/:token/:videoId', async (req, res) => {
         // First API call
         const response1 = await axios.get('https://video-stream-server-z3gs.onrender.com/api/VideoPlayerInfo/GetByToken/' + req.params.token);
         objVideoInfo = response1.data;
-        console.log('Get isplay '+objVideoInfo.isPlay);
+        // console.log('Get isplay '+objVideoInfo.isPlay);
 
         isPlay = objVideoInfo.isPlay;
         if (isPlay == 0) {
